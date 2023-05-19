@@ -1,13 +1,13 @@
 from constants import *
-from servers import tcp, udp
+from clients import tcp_client, udp_client
 
 
-def get_server(connection_type: str):
+def get_client(connection_type: str):
     if connection_type == "tcp":
-        return tcp.Server(HOST, PORT)
+        return tcp_client.Client(HOST, PORT)
 
     elif connection_type == "udp":
-        return udp.Server(HOST, PORT)
+        return udp_client.Client(HOST, PORT)
 
     else:
         raise Exception("Invalid connection type. Must be: tcp, udp or quic")
