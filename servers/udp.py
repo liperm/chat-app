@@ -1,5 +1,5 @@
 import socket
-import threading
+from datetime import datetime
 
 
 class Server:
@@ -8,7 +8,6 @@ class Server:
         self.server.bind((host, port))
         print(f"Server listening on {port}")
         self.clients = []
-        self.nicknames = []
 
     def start(self):
         while True:
@@ -19,18 +18,24 @@ class Server:
                     self.server.sendto(b"Enter your nickname: ", client_addr)
                     nickname = self.server.recvfrom(2048)[0].decode("ascii")
                     self.clients.append(client_addr)
-                    self.nicknames.append(nickname)
                     self.broadcast(
                         f"[server]: [{nickname} entered the chat]".encode("ascii")
                     )
                 else:
                     message = received_message[0]
-                    self.broadcast(message)
+                    print(
+                        f"Message arrived at {datetime.now()}: {message.decode('ascii')}"
+                    )
+                    formatted_message = f"[{datetime.now().time()}]" + message.decode(
+                        "ascii"
+                    )
+                    self.broadcast(formatted_message.encode("ascii"))
 
             except Exception as e:
                 print(e)
                 return
 
     def broadcast(self, message):
+        print(f"Message broadcasted at {datetime.now()}: {message}")
         for client in self.clients:
             self.server.sendto(message, client)

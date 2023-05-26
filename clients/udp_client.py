@@ -1,5 +1,6 @@
 import socket
 import threading
+from datetime import datetime
 
 
 class Client:
@@ -17,6 +18,7 @@ class Client:
                 self.client.sendto(
                     formated_message.encode("ascii"), (self.host, self.port)
                 )
+                print(f"Message sent at {datetime.now().time()}")
             except:
                 raise Exception("Connection Lost!")
 
@@ -24,7 +26,7 @@ class Client:
         while True:
             try:
                 received_message = self.client.recvfrom(2048)[0].decode("ascii")
-                print(received_message)
+                print(f"{received_message} -> received at {datetime.now().time()}")
             except:
                 raise Exception("An error has occured")
 

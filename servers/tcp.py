@@ -1,3 +1,4 @@
+from datetime import datetime
 import socket
 import threading
 
@@ -34,7 +35,11 @@ class Server:
         while True:
             try:
                 message = client.recv(2048)
-                self.broadcast(message)
+                print(f"Message arrived at {datetime.now()}: {message.decode('ascii')}")
+                formatted_message = f"[{datetime.now().time()}]" + message.decode(
+                    "ascii"
+                )
+                self.broadcast(formatted_message.encode("ascii"))
             except Exception as e:
                 print(e)
                 index = self.clients.index(client)
@@ -43,5 +48,6 @@ class Server:
                 break
 
     def broadcast(self, message):
+        print(f"Message broadcasted at {datetime.now()}: {message}")
         for client in self.clients:
             client.send(message)
